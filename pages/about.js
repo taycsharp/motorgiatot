@@ -53,3 +53,4 @@ AboutPage.getInitialProps = wrapper.getInitialPageProps(
 );
 
 export default AboutPage;
+
