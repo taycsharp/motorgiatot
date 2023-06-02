@@ -25,6 +25,7 @@
   background-color: var(--grey);
   color: var(--grey_contrast);
   padding: 3rem 0rem;
+  position: relative;
 }
 
 .footer_container * {

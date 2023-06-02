@@ -168,7 +168,7 @@ function GalleryPage({ data, error }) {
   );
 }
 
-GalleryPage.footer = false;
+GalleryPage.footer = true;
 
 export default GalleryPage;
 
