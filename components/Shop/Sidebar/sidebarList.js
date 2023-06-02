@@ -39,6 +39,7 @@ function SidebarList(props) {
       <div
         className={`${c.filter_btn} ${sidebarOpen ? c.b_left : ""}`}
         onClick={toggleFilter}
+        style={{height: "100%"}}
       >
         <Filter width={33} height={33} />
         <span>{t("filter")}</span>
