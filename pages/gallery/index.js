@@ -126,7 +126,7 @@ function GalleryPage({ data, error }) {
         ) : !data ? (
           <Spinner />
         ) : (
-          <div className="row">
+          <div className="row" style={{height: "100%"}}>
             <SidebarList
               category={data.category}
               brand={data.brand}
