@@ -10,7 +10,7 @@
   width: 18rem;
   height: 100vh;
   display: block;
-  position: fixed;
+  position: relative;
   background: #ffffffd5;
   box-shadow: 8px 9px 4px -9px #1111116b;
   transition: 0.3s all;
