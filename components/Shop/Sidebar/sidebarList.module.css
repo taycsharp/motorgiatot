@@ -93,9 +93,11 @@
     left: -265px;
     width: 265px;
     z-index: 1;
+    position: fixed;
   }
   .filter_btn {
     display: block;
+    height: auto !important;
   }
 }
 
