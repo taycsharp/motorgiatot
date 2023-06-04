@@ -15,7 +15,7 @@ const AboutPage = ({ data, error }) => {
         <>
           <HeadData title="About Us" />
           <div className="layout_top">
-            <h1 className={classes.heading}>{t("about_us")} Teisn</h1>
+            <h1 className={classes.heading}>{t("about_us")} Testing</h1>
             {data && (
               <div
                 className={classes.content}
