@@ -2,5 +2,4 @@ node_modules/
 public/uploads/
 public/product/
 .vscode/
-.env.local
 .next
