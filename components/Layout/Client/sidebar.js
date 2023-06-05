@@ -4,42 +4,39 @@ import { useSelector } from "react-redux";
 import c from "./sidebar.module.css";
 import { signOut } from "next-auth/react";
 import LanguageSwitcher from "~/components/LanguageSwitcher";
-
-const navItem = [
-  {
-    id: 1,
-    name: "Home",
-    to: "/",
-  },
-  {
-    id: 2,
-    name: "Shop",
-    to: "/gallery",
-  },
-  {
-    id: 3,
-    name: "All Categories",
-    to: "/categories",
-  },
-  {
-    id: 4,
-    name: "Compare",
-    to: "/compare",
-  },
-  {
-    id: 5,
-    name: "Faq",
-    to: "/faq",
-  },
-  {
-    id: 6,
-    name: "About",
-    to: "/about",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export default function Sidebar({ show, toggle }) {
   const { session } = useSelector((state) => state.localSession);
+  const { t } = useTranslation();
+  const navItem = [
+    {
+      id: 1,
+      name: t("home"),
+      to: "/",
+    },
+    {
+      id: 2,
+      name: t("shop"),
+      to: "/gallery",
+    },
+    {
+      id: 3,
+      name: t("all_categories"),
+      to: "/categories",
+    },
+    {
+      id: 4,
+      name: t("faq"),
+      to: "/faq",
+    },
+    {
+      id: 5,
+      name: t("about"),
+      to: "/about",
+    },
+  ];
+  
   return (
     <div className={show ? `${c.sidebar} ${c.show}` : `${c.sidebar} ${c.hide}`}>
       <div className={c.header}>
