@@ -3,3 +3,4 @@ public/uploads/
 public/product/
 .vscode/
 .next
+.env.local
