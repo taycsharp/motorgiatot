@@ -113,12 +113,12 @@ const CartPage = () => {
         <p>{t("name")}</p>
         <p>{t("price")}</p>
         <p>{t("quantity")}</p>
-        <p>{t("actions")}</p>
+        <p>{t("action")}</p>
         <p>{t("total")}</p>
       </div>
       {cart.items.map((item, index) => (
         <div key={index} className={classes.body}>
-          <div className={classes.image} data-name="Image">
+          <div className={classes.image} data-name={t("image")}>
             <ImageLoader
               src={item.image[0]?.url}
               height={90}
@@ -126,26 +126,26 @@ const CartPage = () => {
               alt={item.name}
             />
           </div>
-          <div data-name="Name">
+          <div data-name={t("name")}>
             {item.name}
             {item.color.name && <span>Color: {item.color.name}</span>}
             {item.attribute.name && (
               <span>{`${item.attribute.for}: ${item.attribute.name}`}</span>
             )}
           </div>
-          <div data-name="Price">
+          <div data-name={t("price")}>
             {settings.settingsData.currency.symbol}
             {formatNumber(item.price)}
           </div>
-          <div data-name="Quantity">{item.qty}</div>
-          <div className={classes.buttons} data-name="Actions">
+          <div data-name={t("quantity")}>{item.qty}</div>
+          <div className={classes.buttons} data-name={t("action")}>
             <button onClick={() => increaseQty(item.uid)}>+</button>
             <button onClick={() => decreaseQty(item.uid)}>-</button>
             <button onClick={() => dispatch(removeFromCart(item.uid))}>
               x
             </button>
           </div>
-          <div data-name="Total Price">
+          <div data-name={t("total")}>
             {settings.settingsData.currency.symbol}
             {formatNumber(decimalBalance(item.qty * item.price))}
           </div>
