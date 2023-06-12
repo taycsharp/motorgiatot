@@ -340,5 +340,12 @@
   "questions": "Câu hỏi",
   "Related Items": "Sản phẩm liên quan",
   "System Default Language": "Ngôn ngữ mặc định của hệ thống",
-  "delivery" : "Vận chuyển"
+  "delivery" : "Vận chuyển",
+  "Default" : "Mặc định",
+  "Newest" : "Mới nhất",
+  "Oldest" : "Cũ nhất",
+  "Price_high_to_low" : "Giá: cao về thấp",
+  "Price_low_to_high" : "Giá: thấp lên cao",
+  "Name_A-Z" : "Tên: A-Z",
+  "Name_Z-A" : "Tên: Z-A"
 }

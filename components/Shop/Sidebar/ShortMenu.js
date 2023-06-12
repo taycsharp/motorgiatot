@@ -1,17 +1,19 @@
 import { CaretDownFill } from "@styled-icons/bootstrap";
 import { useState } from "react";
 import c from "./shortMenu.module.css";
+import { useTranslation } from "react-i18next";
 
 export default function ShortMenu({ update }) {
   const [show, setShow] = useState(false);
+  const { t } = useTranslation();
   const data = [
-    { name: "Default", id: "db" },
-    { name: "Newest", id: "db" },
-    { name: "Oldest", id: "da" },
-    { name: "Price: low to high", id: "pa" },
-    { name: "Price: high to low", id: "pb" },
-    { name: "Name: A-Z", id: "na" },
-    { name: "Name: Z-A", id: "nb" },
+    { name: t("Default"), id: "db" },
+    { name: t("Newest"), id: "db" },
+    { name: t("Oldest"), id: "da" },
+    { name: t("Price_low_to_high"), id: "pa" },
+    { name: t("Price_high_to_low"), id: "pb" },
+    { name: t("Name_A-Z"), id: "na" },
+    { name: t("Name_Z-A"), id: "nb" },
   ];
   const [selected, setSelected] = useState(data[0]);
 

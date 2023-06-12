@@ -340,5 +340,12 @@
   "questions": "Questions",
   "Related Items": "Related Items",
   "System Default Language": "System Default Language",
-  "delivery" : "Delivery"
+  "delivery" : "Delivery",
+  "Default" : "Default",
+  "Newest" : "Newest",
+  "Oldest" : "Oldest",
+  "Price_high_to_low" : "Price: high to low",
+  "Price_low_to_high" : "Price: low to high",
+  "Name_A-Z" : "Name: A-Z",
+  "Name_Z-A" : "Name: Z-A"
 }
