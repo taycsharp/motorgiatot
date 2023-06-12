@@ -115,7 +115,7 @@ export default function CartView() {
                 ))}
               </ul>
               <div className={c.total}>
-                <span>Total</span>
+                <span>{t("total")}</span>
                 <span>
                   {settings.settingsData.currency.symbol}
                   {formatNumber(getTotalPrice())}
