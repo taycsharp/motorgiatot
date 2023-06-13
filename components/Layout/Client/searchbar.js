@@ -8,6 +8,16 @@ import { fetchData } from "~/lib/clientFunctions";
 import classes from "./searchbar.module.css";
 import { useTranslation } from "react-i18next";
 
+const formatNumber = (numInput) => {
+  const num = parseFloat(numInput?.toString().replace(/,/g, ""));
+  if (!isNaN(num)) {
+    const formattedNum = num.toLocaleString("en-US");
+    return formattedNum;
+  } else {
+    return numInput;
+  }
+}
+
 export default function SearchBar() {
   const [searchData, setSearchData] = useState([]);
   const [searching, setSearching] = useState(false);
@@ -82,7 +92,7 @@ export default function SearchBar() {
                     {product.item.discount < product.item.price && (
                       <del>
                         {settings.settingsData.currency.symbol +
-                          product.item.price}
+                          formatNumber(product.item.price)}
                       </del>
                     )}
                   </span>
