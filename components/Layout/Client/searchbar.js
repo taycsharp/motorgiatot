@@ -88,7 +88,7 @@ export default function SearchBar() {
                   >{`${product.item.unitValue} ${product.item.unit}`}</div>
                   <span>
                     {settings.settingsData.currency.symbol +
-                      product.item.discount}
+                      formatNumber(product.item.discount)}
                     {product.item.discount < product.item.price && (
                       <del>
                         {settings.settingsData.currency.symbol +
