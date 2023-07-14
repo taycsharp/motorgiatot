@@ -14,7 +14,7 @@ const Spinner = dynamic(() => import("~/components/Ui/Spinner"));
 const GlobalModal = dynamic(() => import("~/components/Ui/Modal/modal"));
 const LoadingButton = dynamic(() => import("~/components/Ui/Button"));
 const Accordion = dynamic(() => import("~/components/Ui/Accordion"));
-const FileUpload = dynamic(() => import("~/components/FileUpload/fileUpload"));
+const FileUpload = dynamic(() => import("~/components/FileUpload/fileUpload_LocalOrS3"));
 
 const HomePageSetting = () => {
   const url = `/api/page`;

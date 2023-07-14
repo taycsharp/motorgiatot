@@ -1,16 +1,9 @@
 import { Trash, Upload } from "@styled-icons/bootstrap";
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import ImageLoader from "../Image";
 import classes from "./fileUpload.module.css";
-import {
-  ref,
-  getDownloadURL,
-  uploadBytes,
-  deleteObject,
-} from "firebase/storage";
-import customId from "custom-id-new";
-import { storage } from "~/firebaseConfig";
 
 const FileUpload = ({
   label,
@@ -34,33 +27,65 @@ const FileUpload = ({
     fileInputField.current.click();
   };
 
-  const addNewFilesFirebase = async (file) => {
+  const addNewFilesLocal = async (file) => {
     try {
       setStatus("Uploading...");
-      let fileUrl = "";
-      if (file) {
-        const name = `${customId({ randomLength: 7, lowerCase: true })}${
-          file.name
-        }`;
-        const storageRef = ref(storage, `upload/${name}`);
-        const uploadTask = await uploadBytes(storageRef, file);
-        await getDownloadURL(uploadTask.ref).then((url) => {
-          fileUrl = url;
-        });
-        if (fileUrl.length) {
-          setStatus("");
-          return {
-            name,
-            url: fileUrl,
-          };
-        }
-        return null;
+      const data = new FormData();
+      data.append("file", file);
+      const resp = await axios({
+        method: "post",
+        url: "/api/fileupload/local",
+        data: data,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }).then((res) => res.data);
+      if (resp.success) {
+        setStatus("");
+        return {
+          name: resp.name,
+          url: resp.url,
+        };
       } else {
-        throw new Error("File not found");
+        throw new Error("Something Went Wrong " + resp.err);
       }
     } catch (err) {
       setStatus(err.message);
+    }
+  };
+
+  const addNewFilesS3 = async (file) => {
+    try {
+      setStatus("Uploading...");
+      // get secure url from server
+      const { name, url } = await axios({
+        method: "post",
+        url: `/api/fileupload/s3?name=${file.name}&type=${file.type}`,
+      }).then((res) => res.data);
+
+      // post the image directly to the s3 bucket
+      await axios({
+        method: "put",
+        url,
+        headers: {
+          "Content-Type": file.type,
+        },
+        data: file,
+      });
+
+      const imageUrl = url.split("?")[0];
+      if (imageUrl.length) {
+        setStatus("");
+        return {
+          name,
+          url: imageUrl,
+        };
+      }
+      return null;
+    } catch (err) {
       console.log(err);
+      setStatus(err.message);
+      return null;
     }
   };
 
@@ -72,7 +97,10 @@ const FileUpload = ({
     const { files: newFiles } = e.target;
     if (newFiles.length) {
       if (newFiles[0].size <= maxFileSizeInBytes) {
-        let uploadedFile = await addNewFilesFirebase(newFiles[0]);
+        let uploadedFile =
+          process.env.NEXT_PUBLIC_LOCAL_FILE_SOURCE == "true"
+            ? await addNewFilesLocal(newFiles[0])
+            : await addNewFilesS3(newFiles[0]);
         if (uploadedFile) {
           if (!otherProps.multiple) {
             setFiles([uploadedFile]);
@@ -88,19 +116,27 @@ const FileUpload = ({
     }
   };
 
-  const removeFileFirebase = async (fileName) => {
+  const removeFile = async (fileName) => {
     try {
       setStatus("Deleting...");
-      const desertRef = ref(storage, `upload/${fileName}`);
-      await deleteObject(desertRef).then(() => {
+      const { success, err } = await axios({
+        method: "DELETE",
+        url: `/api/fileupload/${
+          process.env.NEXT_PUBLIC_LOCAL_FILE_SOURCE == "true" ? "local" : "s3"
+        }?name=${fileName}`,
+      }).then((res) => res.data);
+      if (success) {
         const filteredItem = files.filter((item) => item.name !== fileName);
         setFiles(filteredItem);
         callUpdateFilesCb(filteredItem);
-        setStatus("");
-      });
+      } else {
+        toast.error(err);
+      }
     } catch (err) {
-      setStatus(err.message);
+      console.log(err);
+      toast.error(`Something Went Wrong - ${err.message}`);
     }
+    setStatus("");
   };
 
   return (
@@ -150,7 +186,7 @@ const FileUpload = ({
                       width={18}
                       height={18}
                       className={classes.removeFileIcon}
-                      onClick={() => removeFileFirebase(file.name)}
+                      onClick={() => removeFile(file.name)}
                     />
                   </aside>
                 </div>

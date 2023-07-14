@@ -9,7 +9,7 @@ import classes from "~/components/ProductForm/productForm.module.css";
 import { fetchData, postData } from "~/lib/clientFunctions";
 
 const Spinner = dynamic(() => import("~/components/Ui/Spinner"));
-const FileUpload = dynamic(() => import("~/components/FileUpload/fileUpload"));
+const FileUpload = dynamic(() => import("~/components/FileUpload/fileUpload_LocalOrS3"));
 const LoadingButton = dynamic(() => import("~/components/Ui/Button"));
 
 const EditCategory = () => {

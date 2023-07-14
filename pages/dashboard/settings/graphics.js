@@ -8,7 +8,7 @@ import { cpf, fetchData, postData } from "~/lib/clientFunctions";
 
 const Spinner = dynamic(() => import("~/components/Ui/Spinner"));
 const LoadingButton = dynamic(() => import("~/components/Ui/Button"));
-const FileUpload = dynamic(() => import("~/components/FileUpload/fileUpload"));
+const FileUpload = dynamic(() => import("~/components/FileUpload/fileUpload_LocalOrS3"));
 
 const SettingsPageGraphics = () => {
   const url = `/api/settings`;
