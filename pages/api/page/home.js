@@ -112,7 +112,7 @@ export default async function apiHandler(req, res) {
         switch (query.scope) {
           case "carousel":
             const item = await pageData.homePage.carousel.carouselData.filter(
-              (item) => item.id === query.id,
+              (item) => item.id === query.id
             );
             const fileName = [{ Key: item[0].image[0].name }];
             await s3DeleteFiles(fileName);
@@ -120,9 +120,34 @@ export default async function apiHandler(req, res) {
               {},
               {
                 $pull: { "homePage.carousel.carouselData": { id: query.id } },
-              },
+              }
             );
             res.status(200).json({ success: true });
+            break;
+          default:
+            res.status(400).json({ success: false });
+            break;
+        }
+      } catch (err) {
+        console.log(err);
+        res.status(400).json({ success: false, err: err.message });
+      }
+      break;
+
+    case "PUT":
+      try {
+        const { query } = req;
+        //Check Data Scope
+        switch (query.scope) {
+          case "carousel":
+            const r = await pageModel.updateOne(
+              { "homePage.carousel.carouselData.id": req.body.id },
+              {
+                $set: { "homePage.carousel.carouselData.$": req.body },
+              }
+            );
+            console.log(req.body);
+            res.status(200).json({ success: r.modifiedCount > 0 });
             break;
           default:
             res.status(400).json({ success: false });

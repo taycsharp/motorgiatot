@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import useSWR from "swr";
+import EditHeaderCarousel from "~/components/HomePageEdit/editCarousel";
 import ImageLoader from "~/components/Image";
 import classes from "~/components/tableFilter/table.module.css";
 import { cpf, deleteData, fetchData, postData } from "~/lib/clientFunctions";
@@ -14,7 +15,7 @@ const Spinner = dynamic(() => import("~/components/Ui/Spinner"));
 const GlobalModal = dynamic(() => import("~/components/Ui/Modal/modal"));
 const LoadingButton = dynamic(() => import("~/components/Ui/Button"));
 const Accordion = dynamic(() => import("~/components/Ui/Accordion"));
-const FileUpload = dynamic(() => import("~/components/FileUpload/fileUpload_LocalOrS3"));
+const FileUpload = dynamic(() => import("~/components/FileUpload/fileUpload"));
 
 const HomePageSetting = () => {
   const url = `/api/page`;
@@ -24,6 +25,7 @@ const HomePageSetting = () => {
   const [carouselImage, updateCarouselImage] = useState([]);
   const [carouselBackgroundImage, updateCarouselBackgroundImage] = useState([]);
   const [resetCarouselImageInput, setResetCarouselImageInput] = useState("");
+  const [editHeaderCarousel, setEditHeaderCarousel] = useState({});
   const [buttonState, setButtonState] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState("");
@@ -220,15 +222,25 @@ const HomePageSetting = () => {
     },
     {
       name: t("action"),
-      selector: (row) =>
-        permissions.delete && (
-          <div className={classes.button} onClick={() => openModal(row.id)}>
-            <Trash width={22} height={22} title="DELETE" />
-          </div>
-        ),
+      selector: (row) => (
+        <>
+          {permissions.delete && (
+            <div className={classes.button} onClick={() => openModal(row.id)}>
+              <Trash width={22} height={22} title="DELETE" />
+            </div>
+          )}
+          {permissions.edit && (
+            <div
+              className={classes.button}
+              onClick={() => setEditHeaderCarousel(row)}
+            >
+              <PencilSquare width={22} height={22} title="Edit" />
+            </div>
+          )}
+        </>
+      ),
     },
   ];
-
   return (
     <>
       {error ? (
@@ -261,6 +273,17 @@ const HomePageSetting = () => {
             </button>
           </div>
         </div>
+      </GlobalModal>
+      <GlobalModal
+        isOpen={editHeaderCarousel.id ? true : false}
+        handleCloseModal={() => setEditHeaderCarousel({})}
+        small={false}
+      >
+        <EditHeaderCarousel
+          data={editHeaderCarousel}
+          mutate={mutate}
+          close={() => setEditHeaderCarousel({})}
+        />
       </GlobalModal>
     </>
   );
