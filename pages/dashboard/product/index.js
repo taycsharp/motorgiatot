@@ -1,19 +1,19 @@
-import { PencilSquare, Trash } from "@styled-icons/bootstrap";
+import { PencilSquare, Trash, Files } from "@styled-icons/bootstrap";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import useSWR from "swr";
-import ImageLoader from "~/components/Image";
 import classes from "~/components/tableFilter/table.module.css";
-import { cpf, deleteData, fetchData } from "~/lib/clientFunctions";
+import { cpf, deleteData, fetchData, updateData } from "~/lib/clientFunctions";
 
 const DataTable = dynamic(() => import("react-data-table-component"));
 const FilterComponent = dynamic(() => import("~/components/tableFilter"));
 const GlobalModal = dynamic(() => import("~/components/Ui/Modal/modal"));
 const Spinner = dynamic(() => import("~/components/Ui/Spinner"));
+const ImageLoader = dynamic(() => import("~/components/Image"));
+const Link = dynamic(() => import("next/link"));
 
 const ProductList = () => {
   const url = `/api/product`;
@@ -83,6 +83,17 @@ const ProductList = () => {
     );
   }, [filterText, resetPaginationToggle]);
 
+  async function cloneDoc(id) {
+    try {
+      const resp = await updateData("/api/product", { id });
+      resp.success
+        ? (toast.success(resp.message), mutate())
+        : toast.error(resp.message);
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
   const columns = [
     {
       name: t("Product Id"),
@@ -90,7 +101,7 @@ const ProductList = () => {
     },
     {
       name: t("name"),
-      selector: (row) => row.name,
+      selector: (row) => <span title={row.name}>{row.name}</span>,
       sortable: true,
     },
     {
@@ -129,6 +140,11 @@ const ProductList = () => {
                 <PencilSquare width={22} height={22} title="EDIT" />
               </div>
             </Link>
+          )}
+          {permissions.edit && (
+            <div className={classes.button} onClick={() => cloneDoc(row._id)}>
+              <Files width={22} height={22} title="CLONE" />
+            </div>
           )}
         </div>
       ),

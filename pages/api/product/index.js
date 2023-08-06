@@ -1,6 +1,9 @@
 import sessionChecker from "~/lib/sessionPermission";
 import ProductModel from "../../../models/product";
 import dbConnect from "../../../utils/dbConnect";
+import { convertToSlug } from "~/middleware/functions";
+import customIdNew from "custom-id-new";
+import { Types } from "mongoose";
 
 export default async function apiHandler(req, res) {
   const { method } = req;
@@ -14,17 +17,38 @@ export default async function apiHandler(req, res) {
   switch (method) {
     case "GET":
       try {
-        const products = await ProductModel.find({}).sort("-date").exec();
-        //update product price to format like 1,980,000.5 VND
-        const formattedproducts = products.map(pro => {
-          const formattedPrice = pro.price.toLocaleString(undefined, { minimumFractionDigits: 0 });
-          console.log(formattedPrice);
-          return { ...pro._doc, price: formattedPrice }; // Use ._doc to access the product document in Mongoose
-        })
-        res.status(200).json({ success: true, product: formattedproducts});
+        const product = await ProductModel.find({}).sort("-date").exec();
+        res.status(200).json({ success: true, product });
       } catch (err) {
         console.log(err);
         res.status(400).json({ success: false });
+      }
+      break;
+
+    case "PUT":
+      try {
+        const originalDocument = await ProductModel.findById(req.body.id);
+        if (!originalDocument) {
+          throw new Error("Original document not found.");
+        }
+        const clonedDocument = new ProductModel(originalDocument.toObject());
+        clonedDocument._id = new Types.ObjectId();
+        clonedDocument.name = `Clone ${clonedDocument.name}`;
+        clonedDocument.slug = convertToSlug(
+          `${clonedDocument.name} clone`,
+          true
+        );
+        clonedDocument.date = Date.now();
+        clonedDocument.productId =
+          "P" + customIdNew({ randomLength: 4, upperCase: true });
+        await clonedDocument.save();
+
+        res
+          .status(200)
+          .json({ success: true, message: "Product Successfully Cloned" });
+      } catch (err) {
+        console.log(err);
+        res.status(400).json({ success: false, message: err.message });
       }
       break;
 
