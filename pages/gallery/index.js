@@ -120,7 +120,7 @@ function GalleryPage({ data, error }) {
   return (
     <>
       <HeadData />
-      <div style={{ height: "100vh" }}>
+      <div >
         {error ? (
           <Error500 />
         ) : !data ? (
